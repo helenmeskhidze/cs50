@@ -1,0 +1,12 @@
+sort1 uses: bubble sort
+
+How do you know?: It outperforms all other algorithms on the sorted list. This is the best case for bubble sort where omega is n.
+
+sort2 uses: merge sort
+
+How do you know?: The time it takes for a random list of factor 10 greater is linear. It is also outperformed by the other algorithms on the sorted list though because its omega is still (n log n) while the omega for, e.g., bubble sort is n.
+
+sort3 uses: selection sort
+
+How do you know?: Bubble outperforms it on the sorted list but otherwise, they're comparable.
+unzip

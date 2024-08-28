@@ -1,0 +1,44 @@
+footer {
+    background-color: aquamarine;
+    text-color: black;
+    text-align: center;
+    vertical-align: text-bottom;
+
+}
+
+nav {
+    background-color: green;
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+}
+
+content-wrap {
+    padding-bottom: 5rem;    /* Footer height */
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5rem;            /* Footer height */
+}
+
+
+div.gallery {
+    margin: 5px;
+    float: left;
+    width: 360px;
+  }
+
+  div.gallery img {
+    width: 100%;
+    height: 450px;
+  }
+
+  div.desc {
+    padding: 15px;
+    text-align: center;
+  }

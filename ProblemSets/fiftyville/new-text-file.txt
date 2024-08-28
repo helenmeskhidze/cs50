@@ -1,0 +1,78 @@
+crime_scene_reports
+295 | 2023 | 7     | 28  | Humphrey Street      | Theft of the CS50 duck took place at 10:15am at the Humphrey Street bakery. Interviews were conducted today with three witnesses who were present at the time – each of their interview transcripts mentions the bakery. |
+
+
+| 161 | Ruth    | 2023 | 7     | 28  | Sometime within ten minutes of the theft, I saw the thief get into a car in the bakery parking lot and drive away. If you have security footage from the bakery parking lot, you might want to look for cars that left the parking lot in that time frame.                                                          |
+| 162 | Eugene  | 2023 | 7     | 28  | I don't know the thief's name, but it was someone I recognized. Earlier this morning, before I arrived at Emma's bakery, I was walking by the ATM on Leggett Street and saw the thief there withdrawing some money.                                                                                                 |
+| 163 | Raymond | 2023 | 7     | 28  | As the thief was leaving the bakery, they called someone who talked to them for less than a minute. In the call, I heard the thief say that they were planning to take the earliest flight out of Fiftyville tomorrow. The thief then asked the person on the other end of the phone to purchase the flight ticket. |
+
+SELECT * FROM bakery_security_logs WHERE year=2023 AND month=7 AND day=28 LIMIT 5;
+
+select * from atm_transactions WHERE year=2023 AND month=7 AND day=28 AND atm_location="Leggett Street";
++-----+----------------+------+-------+-----+----------------+------------------+--------+
+| id  | account_number | year | month | day |  atm_location  | transaction_type | amount |
++-----+----------------+------+-------+-----+----------------+------------------+--------+
+| 246 | 28500762       | 2023 | 7     | 28  | Leggett Street | withdraw         | 48     |
+| 264 | 28296815       | 2023 | 7     | 28  | Leggett Street | withdraw         | 20     |
+| 266 | 76054385       | 2023 | 7     | 28  | Leggett Street | withdraw         | 60     |
+| 267 | 49610011       | 2023 | 7     | 28  | Leggett Street | withdraw         | 50     |
+| 269 | 16153065       | 2023 | 7     | 28  | Leggett Street | withdraw         | 80     |
+| 275 | 86363979       | 2023 | 7     | 28  | Leggett Street | deposit          | 10     |
+| 288 | 25506511       | 2023 | 7     | 28  | Leggett Street | withdraw         | 20     |
+| 313 | 81061156       | 2023 | 7     | 28  | Leggett Street | withdraw         | 30     |
+| 336 | 26013199       | 2023 | 7     | 28  | Leggett Street | withdraw         | 35     |
++-----+----------------+------+-------+-----+----------------+------------------+--------+
+
+sqlite> SELECT * FROM phone_calls WHERE year=2023 AND month=7 AND day=27 AND duration<60;
++-----+----------------+----------------+------+-------+-----+----------+
+| id  |     caller     |    receiver    | year | month | day | duration |
++-----+----------------+----------------+------+-------+-----+----------+
+| 175 | (789) 555-8833 | (960) 555-2044 | 2023 | 7     | 27  | 33       |
++-----+----------------+----------------+------+-------+-----+----------+
+
+sqlite> SELECT * FROM people WHERE phone_number="(789) 555-8833" LIMIT 5;
++--------+--------+----------------+-----------------+---------------+
+|   id   |  name  |  phone_number  | passport_number | license_plate |
++--------+--------+----------------+-----------------+---------------+
+| 229572 | Ernest | (789) 555-8833 | 6216255522      | C3S4W87       |
++--------+--------+----------------+-----------------+---------------+
+sqlite> SELECT * FROM people WHERE phone_number="(960) 555-2044" LIMIT 5;
++--------+----------+----------------+-----------------+---------------+
+|   id   |   name   |  phone_number  | passport_number | license_plate |
++--------+----------+----------------+-----------------+---------------+
+| 548858 | Kathleen | (960) 555-2044 | 2628207874      | PF37ZVK       |
++--------+----------+----------------+-----------------+---------------+
+
+SELECT p.name, receiver.name, p.phone_number, p.license_plate, bsl.activity AS "Activity", origin.full_name AS "Origin", destination.full_name AS "Destination", atm.transaction_type
+SELECT p.name, receiver.name, destination.full_name AS "Destination", flight.*
+FROM people AS p
+JOIN phone_calls AS caller ON p.phone_number=caller.caller
+JOIN people AS receiver ON caller.receiver=receiver.phone_number
+JOIN bakery_security_logs AS bsl ON p.license_plate=bsl.license_plate
+JOIN bank_accounts AS ba ON p.id=ba.person_id
+JOIN atm_transactions AS atm ON ba.account_number=atm.account_number
+JOIN passengers AS pass ON pass.passport_number=p.passport_number
+JOIN flights AS flight ON flight.id=pass.flight_id
+JOIN airports AS origin ON origin.id=flight.origin_airport_id
+JOIN airports AS destination ON destination.id=flight.destination_airport_id
+WHERE
+    bsl.year=2023
+    AND bsl.month=7
+    AND bsl.day=28
+    AND caller.year=2023
+    AND caller.month=7
+    AND caller.day=28
+    AND caller.duration<60
+    AND atm.year=2023
+    AND atm.month=7
+    AND atm.day=28
+    AND atm.atm_location="Leggett Street"
+    AND flight.year=2023
+    AND flight.month=7
+    AND flight.day=29
+    AND bsl.minute>=5
+    AND bsl.minute<=25
+    AND bsl.hour=10
+    AND bsl.activity="exit"
+ORDER BY flight.hour LIMIT 1
+;

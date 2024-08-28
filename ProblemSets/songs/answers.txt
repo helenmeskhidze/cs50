@@ -1,0 +1,2 @@
+Audio aura has pretty high tempo, high dancability songs. A fair amount of rap/r&b and a good amount of diversity of artists (70 unique).
+These are metrics that are included in the file so we'd be able to quantify them. Really, what we need is some more general comparison to the average user.
